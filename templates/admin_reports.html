@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+```
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Admin Reports - CCRS</title>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f4f6f9;
+        color: #333;
+    }
+
+    .header {
+        background: #1f4e79;
+        color: white;
+        padding: 20px 30px;
+    }
+
+    .header h1 {
+        margin: 0;
+    }
+
+    .header p {
+        margin: 8px 0 0;
+    }
+
+    .container {
+        width: 95%;
+        max-width: 1200px;
+        margin: 25px auto;
+    }
+
+    /* =========================
+       STATISTICS
+    ========================= */
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 20px;
+        text-align: center;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .stat-card h2 {
+        margin: 0;
+        font-size: 30px;
+    }
+
+    .stat-card p {
+        margin: 8px 0 0;
+        color: #666;
+    }
+
+    .total h2 {
+        color: #1f4e79;
+    }
+
+    .submitted h2 {
+        color: #f39c12;
+    }
+
+    .assigned h2 {
+        color: #3498db;
+    }
+
+    .progress h2 {
+        color: #e67e22;
+    }
+
+    .resolved h2 {
+        color: #27ae60;
+    }
+
+    /* =========================
+       CHARTS
+    ========================= */
+
+    .charts {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+        margin-bottom: 30px;
+    }
+
+    .chart-card {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .chart-card h2 {
+        margin-top: 0;
+        color: #1f4e79;
+        text-align: center;
+    }
+
+    .chart-container {
+        position: relative;
+        height: 350px;
+    }
+
+    /* =========================
+       CATEGORY TABLE
+    ========================= */
+
+    .section {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+    }
+
+    .section h2 {
+        margin-top: 0;
+        color: #1f4e79;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        background: #1f4e79;
+        color: white;
+        padding: 12px;
+        text-align: left;
+    }
+
+    td {
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    tr:hover {
+        background: #f8f9fa;
+    }
+
+    /* =========================
+       BUTTONS
+    ========================= */
+
+    .actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 11px 18px;
+        text-decoration: none;
+        color: white;
+        border-radius: 5px;
+        background: #1f4e79;
+    }
+
+    .btn:hover {
+        opacity: 0.9;
+    }
+
+    .back {
+        background: #3498db;
+    }
+
+    .pdf {
+        background: #27ae60;
+    }
+
+    .logout {
+        background: #c0392b;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 900px) {
+
+        .stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .charts {
+            grid-template-columns: 1fr;
+        }
+
+    }
+
+    @media (max-width: 500px) {
+
+        .stats {
+            grid-template-columns: 1fr;
+        }
+
+    }
+
+</style>
+```
+
+</head>
+
+<body>
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<div class="header">
+
+```
+<h1>Campus Complaint Registry System</h1>
+
+<p>
+    Admin Reports |
+    Welcome, {{ session['name'] }}
+</p>
+```
+
+</div>
+
+<div class="container">
+
+```
+<!-- =========================
+     STATISTICS
+========================= -->
+
+<div class="stats">
+
+    <div class="stat-card total">
+
+        <h2>
+            {{ total_complaints }}
+        </h2>
+
+        <p>
+            Total Complaints
+        </p>
+
+    </div>
+
+
+    <div class="stat-card submitted">
+
+        <h2>
+            {{ submitted }}
+        </h2>
+
+        <p>
+            Submitted
+        </p>
+
+    </div>
+
+
+    <div class="stat-card assigned">
+
+        <h2>
+            {{ assigned }}
+        </h2>
+
+        <p>
+            Assigned
+        </p>
+
+    </div>
+
+
+    <div class="stat-card progress">
+
+        <h2>
+            {{ in_progress }}
+        </h2>
+
+        <p>
+            In Progress
+        </p>
+
+    </div>
+
+
+    <div class="stat-card resolved">
+
+        <h2>
+            {{ resolved }}
+        </h2>
+
+        <p>
+            Resolved
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     CHARTS
+========================= -->
+
+<div class="charts">
+
+
+    <!-- STATUS CHART -->
+
+    <div class="chart-card">
+
+        <h2>
+            Complaint Status
+        </h2>
+
+        <div class="chart-container">
+
+            <canvas id="statusChart"></canvas>
+
+        </div>
+
+    </div>
+
+
+    <!-- CATEGORY CHART -->
+
+    <div class="chart-card">
+
+        <h2>
+            Complaints by Category
+        </h2>
+
+        <div class="chart-container">
+
+            <canvas id="categoryChart"></canvas>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<!-- =========================
+     CATEGORY TABLE
+========================= -->
+
+<div class="section">
+
+    <h2>
+        Category-wise Complaint Report
+    </h2>
+
+
+    {% if categories %}
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>
+                    Category
+                </th>
+
+                <th>
+                    Number of Complaints
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            {% for category in categories %}
+
+            <tr>
+
+                <td>
+                    {{ category[0] }}
+                </td>
+
+                <td>
+                    {{ category[1] }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+    {% else %}
+
+    <p>
+        No category data available.
+    </p>
+
+    {% endif %}
+
+</div>
+
+
+<!-- =========================
+     ACTIONS
+========================= -->
+
+<div class="actions">
+
+    <!-- PDF DOWNLOAD BUTTON -->
+
+    <a
+        href="{{ url_for('download_report') }}"
+        class="btn pdf"
+    >
+        📄 Download PDF Report
+    </a>
+
+
+    <!-- BACK TO DASHBOARD -->
+
+    <a
+        href="{{ url_for('admin_dashboard') }}"
+        class="btn back"
+    >
+        Back to Dashboard
+    </a>
+
+
+    <!-- LOGOUT -->
+
+    <a
+        href="{{ url_for('logout') }}"
+        class="btn logout"
+    >
+        Logout
+    </a>
+
+</div>
+```
+
+</div>
+
+<!-- =========================
+     CHART JAVASCRIPT
+========================= -->
+
+<script>
+
+    /* =========================
+       STATUS CHART
+    ========================= */
+
+    const statusChart =
+        document.getElementById('statusChart');
+
+
+    new Chart(
+        statusChart,
+        {
+            type: 'doughnut',
+
+            data: {
+
+                labels: [
+                    'Submitted',
+                    'Assigned',
+                    'In Progress',
+                    'Resolved'
+                ],
+
+                datasets: [
+
+                    {
+
+                        data: [
+                            {{ submitted }},
+                            {{ assigned }},
+                            {{ in_progress }},
+                            {{ resolved }}
+                        ]
+
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+
+                        position: 'bottom'
+
+                    }
+
+                }
+
+            }
+
+        }
+    );
+
+
+    /* =========================
+       CATEGORY CHART
+    ========================= */
+
+    const categoryChart =
+        document.getElementById('categoryChart');
+
+
+    new Chart(
+        categoryChart,
+        {
+            type: 'bar',
+
+            data: {
+
+                labels: [
+
+                    {% for category in categories %}
+
+                    "{{ category[0] }}"
+
+                    {% if not loop.last %},{% endif %}
+
+                    {% endfor %}
+
+                ],
+
+                datasets: [
+
+                    {
+
+                        label: 'Number of Complaints',
+
+                        data: [
+
+                            {% for category in categories %}
+
+                            {{ category[1] }}
+
+                            {% if not loop.last %},{% endif %}
+
+                            {% endfor %}
+
+                        ]
+
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        ticks: {
+
+                            stepSize: 1
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+    );
+
+</script>
+
+</body>
+
+</html>

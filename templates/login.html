@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login - Campus Complaint Registry System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Decorative glow shapes */
+        body::before,
+        body::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            z-index: 0;
+        }
+
+        body::before {
+            width: 320px;
+            height: 320px;
+            background: #ff6a88;
+            top: -80px;
+            left: -80px;
+            opacity: 0.5;
+        }
+
+        body::after {
+            width: 380px;
+            height: 380px;
+            background: #00f2fe;
+            bottom: -100px;
+            right: -100px;
+            opacity: 0.4;
+        }
+
+        .login-container {
+            width: 400px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 40px 35px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+            position: relative;
+            z-index: 1;
+        }
+
+        .icon-badge {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 18px;
+            background: linear-gradient(135deg, hsl(330, 100%, 71%), #ff9a8b);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            box-shadow: 0 6px 16px #ff6ac666;
+        }
+
+        .login-container h1 {
+            text-align: center;
+            color: #ffffff;
+            margin-bottom: 6px;
+            font-size: 24px;
+            letter-spacing: 0.3px;
+        }
+
+        .login-container .subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.65);
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 30px;
+            font-size: 15px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.45);
+        }
+
+        .form-group input:focus {
+            border-color: #ff9a8b;
+            background: rgba(255, 255, 255, 0.16);
+            box-shadow: 0 0 0 3px rgba(255, 154, 139, 0.25);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #ff6a88, #ff9a8b);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 106, 136, 0.35);
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 22px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.65);
+        }
+
+        .register-link a {
+            color: #ff9a8b;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .message {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            text-align: center;
+            background: rgba(255, 80, 80, 0.15);
+            border: 1px solid rgba(255, 80, 80, 0.3);
+            color: #ffb3b3;
+            font-size: 14px;
+        }
+
+        .success {
+            background: rgba(80, 255, 150, 0.12);
+            border: 1px solid rgba(80, 255, 150, 0.3);
+            color: #a3ffcb;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <div class="icon-badge">🎓</div>
+
+        <h1>Campus Complaint Registry</h1>
+
+        <p class="subtitle">Login to your account</p>
+
+        <!-- Display Flask messages -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="message">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Login Form -->
+        <form method="POST" action="{{ url_for('login') }}">
+
+            <div class="form-group">
+                <label for="email">Email</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="example@gmail.com"
+                    autocomplete="email"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="login-btn">
+                Login
+            </button>
+
+        </form>
+
+        <div class="register-link">
+            Don't have an account?
+            <a href="{{ url_for('register') }}">Register here</a>
+        </div>
+
+    </div>
+
+</body>
+</html>

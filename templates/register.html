@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Registration - CCRS</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <header>
+
+        <div class="logo">
+            CCRS
+        </div>
+
+        <nav>
+            <a href="/">Home</a>
+            <a href="/login">Login</a>
+        </nav>
+
+    </header>
+
+
+    <div class="form-container">
+
+        <h1>Student Registration</h1>
+
+        <p>Create your CCRS student account</p>
+
+
+        <form method="POST" action="/register">
+
+            <label>Student Name</label>
+
+            <input
+                type="text"
+                name="name"
+                placeholder="Enter your name"
+                required
+            >
+
+
+            <label>Register Number</label>
+
+            <input
+                type="text"
+                name="register_number"
+                placeholder="Enter your register number"
+                required
+            >
+
+
+            <label>Email</label>
+
+            <input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                required
+            >
+
+
+            <label>Password</label>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Enter password"
+                required
+            >
+
+
+            <button type="submit">
+                Register
+            </button>
+
+        </form>
+
+
+        <p class="login-link">
+            Already have an account?
+            <a href="/login">Login here</a>
+        </p>
+
+    </div>
+
+
+    <footer>
+
+        <p>
+            Adhiyamaan College of Engineering
+        </p>
+
+        <p>
+            Campus Complaint Registry System | MCA
+        </p>
+
+    </footer>
+
+</body>
+
+</html>

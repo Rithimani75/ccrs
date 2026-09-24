@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Submit Complaint - CCRS</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, lab(32.46% -11.94 -18.5), #ffd200);
+            background-attachment: fixed;
+            color: #2b2b2b;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 30px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header .logo {
+            font-weight: 800;
+            font-size: 20px;
+            letter-spacing: 1px;
+            color: #d35400;
+        }
+
+        header nav a {
+            margin-left: 18px;
+            text-decoration: none;
+            font-weight: 600;
+            color: #444;
+            padding: 6px 12px;
+            border-radius: 20px;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        header nav a:hover {
+            background: #ffedcc;
+            color: #d35400;
+        }
+
+        .form-container {
+            max-width: 620px;
+            margin: 50px auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 18px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-container::before {
+            content: "";
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 160px;
+            height: 160px;
+            background: radial-gradient(circle, #ffd200, transparent 70%);
+            opacity: 0.6;
+            border-radius: 50%;
+        }
+
+        .form-container h1 {
+            font-size: 26px;
+            color: #d35400;
+            margin-bottom: 6px;
+        }
+
+        .form-container > p {
+            color: #777;
+            margin-bottom: 28px;
+            font-size: 14px;
+        }
+
+        form label {
+            display: block;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #555;
+            margin-bottom: 6px;
+            margin-top: 18px;
+        }
+
+        form select,
+        form textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #f1c40f33;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            background: #fffdf5;
+            color: #2b2b2b;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            resize: vertical;
+        }
+
+        form select:focus,
+        form textarea:focus {
+            border-color: #f7971e;
+            box-shadow: 0 0 0 3px rgba(247, 151, 30, 0.2);
+        }
+
+        form input[type="file"] {
+            width: 100%;
+            margin-top: 4px;
+            padding: 10px;
+            border: 2px dashed #f7971e88;
+            border-radius: 10px;
+            background: #fffdf5;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        form button[type="submit"] {
+            width: 100%;
+            margin-top: 28px;
+            padding: 14px;
+            background: linear-gradient(135deg, #f7971e, #d35400);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        form button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(211, 84, 0, 0.35);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 24px;
+        }
+
+        .login-link a {
+            color: #d35400;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 22px 10px 30px;
+            color: rgba(43, 43, 43, 0.65);
+            font-size: 13px;
+        }
+
+        footer p {
+            margin: 2px 0;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        CCRS
+    </div>
+
+    <nav>
+        <a href="/student_dashboard">Dashboard</a>
+        <a href="/logout">Logout</a>
+    </nav>
+
+</header>
+
+
+<div class="form-container">
+
+    <h1>Submit Complaint</h1>
+
+    <p>Report a problem on campus</p>
+
+
+    <form method="POST"
+          action="/submit_complaint"
+          enctype="multipart/form-data">
+
+
+        <label>Complaint Category</label>
+
+        <select name="category" required>
+
+            <option value="">Select Category</option>
+
+            <option value="Hostel">
+                Hostel
+            </option>
+
+            <option value="Classroom">
+                Classroom
+            </option>
+
+            <option value="Library">
+                Library
+            </option>
+
+            <option value="Laboratory">
+                Laboratory
+            </option>
+
+            <option value="Canteen">
+                Canteen
+            </option>
+
+            <option value="Transport">
+                Transport
+            </option>
+
+            <option value="Infrastructure">
+                Infrastructure
+            </option>
+
+            <option value="Other">
+                Other
+            </option>
+
+        </select>
+
+
+        <label>Complaint Description</label>
+
+        <textarea
+            name="description"
+            rows="6"
+            placeholder="Describe your complaint clearly..."
+            required></textarea>
+
+
+        <label>Upload Image (Optional)</label>
+
+        <input
+            type="file"
+            name="image"
+            accept="image/*">
+
+
+        <button type="submit">
+            Submit Complaint
+        </button>
+
+    </form>
+
+
+    <p class="login-link">
+        <a href="/student_dashboard">
+            ← Back to Dashboard
+        </a>
+    </p>
+
+</div>
+
+
+<footer>
+
+    <p>
+        Adhiyamaan College of Engineering
+    </p>
+
+    <p>
+        Campus Complaint Registry System | MCA
+    </p>
+
+</footer>
+
+</body>
+
+</html>

@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Staff Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #222;
+        }
+
+        .welcome {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .complaint {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .complaint h3 {
+            margin-top: 0;
+            color: #2563eb;
+        }
+
+        .details {
+            margin: 8px 0;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .logout {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 18px;
+            background: #dc2626;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .message {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+        .no-complaints {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Staff Dashboard</h1>
+
+    <div class="welcome">
+        <h3>Welcome, {{ session['name'] }}</h3>
+        <p>You can update the status and add remarks for your assigned complaints.</p>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+
+    <h2>Assigned Complaints</h2>
+
+    {% if complaints %}
+
+        {% for complaint in complaints %}
+
+        <div class="complaint">
+
+            <h3>Complaint ID: {{ complaint[1] }}</h3>
+
+            <div class="details">
+                <strong>Student:</strong> {{ complaint[2] }}
+            </div>
+
+            <div class="details">
+                <strong>Category:</strong> {{ complaint[3] }}
+            </div>
+
+            <div class="details">
+                <strong>Description:</strong> {{ complaint[4] }}
+            </div>
+
+            <div class="details">
+                <strong>Current Status:</strong> {{ complaint[5] }}
+            </div>
+
+            <div class="details">
+                <strong>Created Date:</strong> {{ complaint[6] }}
+            </div>
+
+
+            {% if complaint[7] %}
+
+                <div class="details">
+                    <strong>Image:</strong>
+                    <br>
+                    <img src="{{ url_for('static', filename='uploads/' + complaint[7]) }}"
+                         width="250">
+                </div>
+
+            {% endif %}
+
+
+            <form method="POST"
+                  action="{{ url_for('staff_update_status', complaint_id=complaint[0]) }}">
+
+                <label for="status_{{ complaint[0] }}">
+                    Update Status
+                </label>
+
+                <select name="status" id="status_{{ complaint[0] }}" required>
+
+                    <option value="Assigned"
+                        {% if complaint[5] == 'Assigned' %}selected{% endif %}>
+                        Assigned
+                    </option>
+
+                    <option value="In Progress"
+                        {% if complaint[5] == 'In Progress' %}selected{% endif %}>
+                        In Progress
+                    </option>
+
+                    <option value="Resolved"
+                        {% if complaint[5] == 'Resolved' %}selected{% endif %}>
+                        Resolved
+                    </option>
+
+                </select>
+
+
+                <label for="remarks_{{ complaint[0] }}">
+                    Remarks
+                </label>
+
+                <textarea
+                    name="remarks"
+                    id="remarks_{{ complaint[0] }}"
+                    placeholder="Enter remarks about the complaint..."></textarea>
+
+
+                <button type="submit">
+                    Update Complaint
+                </button>
+
+            </form>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="no-complaints">
+            <p>No complaints assigned to you.</p>
+        </div>
+
+    {% endif %}
+
+
+    <a href="{{ url_for('logout') }}" class="logout">
+        Logout
+    </a>
+
+</div>
+
+</body>
+</html>
+

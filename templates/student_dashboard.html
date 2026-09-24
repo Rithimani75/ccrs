@@ -1,0 +1,188 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #222;
+        }
+
+        .welcome {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .notification {
+            background: #d1fae5;
+            border-left: 5px solid #16a34a;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            color: #166534;
+        }
+
+        .complaint {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .complaint h3 {
+            color: #2563eb;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+
+        .resolved {
+            color: #16a34a;
+        }
+
+        .other {
+            color: #d97706;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 15px;
+            margin-top: 12px;
+            margin-right: 8px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .logout {
+            background: #dc2626;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Campus Complaint Registry System</h1>
+
+    <div class="welcome">
+        <h2>Student Dashboard</h2>
+        <p>Welcome, {{ session['name'] }}</p>
+    </div>
+
+
+    {% if complaints %}
+
+        {% for complaint in complaints %}
+
+            {% if complaint[4] == 'Resolved' %}
+
+                <div class="notification">
+                    <strong>Complaint Resolved!</strong><br>
+                    Your complaint
+                    <strong>{{ complaint[1] }}</strong>
+                    has been resolved.
+                </div>
+
+            {% endif %}
+
+
+            <div class="complaint">
+
+                <h3>Complaint ID: {{ complaint[1] }}</h3>
+
+                <p>
+                    <strong>Category:</strong>
+                    {{ complaint[2] }}
+                </p>
+
+                <p>
+                    <strong>Description:</strong>
+                    {{ complaint[3] }}
+                </p>
+
+                <p>
+                    <strong>Status:</strong>
+
+                    {% if complaint[4] == 'Resolved' %}
+                        <span class="status resolved">
+                            {{ complaint[4] }}
+                        </span>
+                    {% else %}
+                        <span class="status other">
+                            {{ complaint[4] }}
+                        </span>
+                    {% endif %}
+
+                </p>
+
+                <p>
+                    <strong>Submitted On:</strong>
+                    {{ complaint[5] }}
+                </p>
+
+
+                <a href="{{ url_for('complaint_details', complaint_id=complaint[0]) }}"
+                   class="button">
+                    View Details
+                </a>
+
+                <a href="{{ url_for('complaint_history', complaint_id=complaint[0]) }}"
+                   class="button">
+                    View History
+                </a>
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="complaint">
+            <p>No complaints submitted yet.</p>
+
+            <a href="/submit_complaint" class="button">
+                Submit Complaint
+            </a>
+        </div>
+
+    {% endif %}
+
+
+    <a href="/submit_complaint" class="button">
+        Submit New Complaint
+    </a>
+
+    <a href="/my_complaints" class="button">
+        My Complaints
+    </a>
+
+    <a href="/logout" class="button logout">
+        Logout
+    </a>
+
+</div>
+
+</body>
+</html>
+

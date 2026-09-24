@@ -1,0 +1,379 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Complaints - Campus Complaint Registry System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #1f4e79;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .top-bar h2 {
+            margin: 0;
+        }
+
+        .logout {
+            background-color: #dc3545;
+            color: white;
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 5px;
+        }
+
+        .logout:hover {
+            background-color: #b02a37;
+        }
+
+        .complaint-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+        }
+
+        .complaint-card h3 {
+            margin-top: 0;
+            color: #1f4e79;
+        }
+
+        .complaint-info {
+            margin: 8px 0;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+
+        .status-submitted {
+            color: #6c757d;
+        }
+
+        .status-assigned {
+            color: #007bff;
+        }
+
+        .status-progress {
+            color: #fd7e14;
+        }
+
+        .status-resolved {
+            color: #198754;
+        }
+
+        .progress-container {
+            margin-top: 25px;
+            margin-bottom: 25px;
+        }
+
+        .progress-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .progress {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin: 25px 10px;
+        }
+
+        .progress::before {
+            content: "";
+            position: absolute;
+            top: 20px;
+            left: 5%;
+            right: 5%;
+            height: 4px;
+            background-color: #d6d6d6;
+            z-index: 0;
+        }
+
+        .step {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            width: 25%;
+        }
+
+        .circle {
+            width: 40px;
+            height: 40px;
+            margin: auto;
+            border-radius: 50%;
+            background-color: #d6d6d6;
+            color: #555;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .step-label {
+            margin-top: 8px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .step.active .circle {
+            background-color: #198754;
+            color: white;
+        }
+
+        .step.active .step-label {
+            color: #198754;
+        }
+
+        .buttons {
+            margin-top: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-right: 8px;
+            color: white;
+        }
+
+        .btn-details {
+            background-color: #1f4e79;
+        }
+
+        .btn-history {
+            background-color: #6f42c1;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .no-complaints {
+            background-color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Campus Complaint Registry System</h1>
+</header>
+
+<div class="container">
+
+    <div class="top-bar">
+        <h2>My Complaints</h2>
+        <a href="/logout" class="logout">Logout</a>
+    </div>
+
+    {% if complaints %}
+
+        {% for complaint in complaints %}
+
+        <div class="complaint-card">
+
+            <h3>Complaint #{{ complaint[1] }}</h3>
+
+            <p class="complaint-info">
+                <strong>Category:</strong>
+                {{ complaint[2] }}
+            </p>
+
+            <p class="complaint-info">
+                <strong>Description:</strong>
+                {{ complaint[3] }}
+            </p>
+
+            <p class="complaint-info">
+                <strong>Current Status:</strong>
+
+                {% if complaint[5] == 'Submitted' %}
+                    <span class="status status-submitted">
+                        Submitted
+                    </span>
+
+                {% elif complaint[5] == 'Assigned' %}
+                    <span class="status status-assigned">
+                        Assigned
+                    </span>
+
+                {% elif complaint[5] == 'In Progress' %}
+                    <span class="status status-progress">
+                        In Progress
+                    </span>
+
+                {% elif complaint[5] == 'Resolved' %}
+                    <span class="status status-resolved">
+                        Resolved
+                    </span>
+
+                {% else %}
+                    <span class="status">
+                        {{ complaint[5] }}
+                    </span>
+                {% endif %}
+
+            </p>
+
+
+            <!-- COMPLAINT PROGRESS -->
+
+            <div class="progress-container">
+
+                <div class="progress-title">
+                    Complaint Progress
+                </div>
+
+                <div class="progress">
+
+                    <!-- STEP 1 -->
+                    <div class="step
+                        {% if complaint[5] in ['Submitted', 'Assigned', 'In Progress', 'Resolved'] %}
+                            active
+                        {% endif %}
+                    ">
+
+                        <div class="circle">
+                            1
+                        </div>
+
+                        <div class="step-label">
+                            Submitted
+                        </div>
+
+                    </div>
+
+
+                    <!-- STEP 2 -->
+                    <div class="step
+                        {% if complaint[5] in ['Assigned', 'In Progress', 'Resolved'] %}
+                            active
+                        {% endif %}
+                    ">
+
+                        <div class="circle">
+                            2
+                        </div>
+
+                        <div class="step-label">
+                            Assigned
+                        </div>
+
+                    </div>
+
+
+                    <!-- STEP 3 -->
+                    <div class="step
+                        {% if complaint[5] in ['In Progress', 'Resolved'] %}
+                            active
+                        {% endif %}
+                    ">
+
+                        <div class="circle">
+                            3
+                        </div>
+
+                        <div class="step-label">
+                            In Progress
+                        </div>
+
+                    </div>
+
+
+                    <!-- STEP 4 -->
+                    <div class="step
+                        {% if complaint[5] == 'Resolved' %}
+                            active
+                        {% endif %}
+                    ">
+
+                        <div class="circle">
+                            4
+                        </div>
+
+                        <div class="step-label">
+                            Resolved
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="buttons">
+
+                <a
+                    href="/complaint/{{ complaint[0] }}"
+                    class="btn btn-details"
+                >
+                    View Details
+                </a>
+
+                <a
+                    href="/complaint_history/{{ complaint[0] }}"
+                    class="btn btn-history"
+                >
+                    View History
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="no-complaints">
+            <h3>No complaints found.</h3>
+            <p>You have not submitted any complaints yet.</p>
+        </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>
+
