@@ -31,20 +31,9 @@ echo [INFO] Installing required dependencies...
 pip install -r requirements.txt --quiet
 echo [OK] Dependencies installed successfully.
 
-:: 4. Database Setup (Optional/Auto if MySQL is in PATH)
-mysql -V >nul 2>&1
-IF %ERRORLEVEL% EQU 0 (
-    echo [INFO] MySQL detected. Ensuring database and tables exist...
-    mysql -u root -e "CREATE DATABASE IF NOT EXISTS ccrs;" >nul 2>&1
-    mysql -u root ccrs < database.sql >nul 2>&1
-    echo [OK] Database verified.
-) ELSE (
-    echo.
-    echo [WARNING] MySQL command not found in PATH.
-    echo If you use XAMPP or WAMP, please ensure MySQL is running on port 3306.
-    echo Note: You must manually import 'database.sql' into your 'ccrs' database via phpMyAdmin.
-    echo.
-)
+:: 4. Database Setup
+echo [INFO] Setting up database...
+python init_db.py
 
 echo.
 echo ========================================================
