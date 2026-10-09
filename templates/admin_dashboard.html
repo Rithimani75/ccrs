@@ -1,919 +1,269 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — CCRS</title>
 
-```
-<meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
-
-<title>Admin Dashboard - CCRS</title>
-
-<style>
-
-    * {
-        box-sizing: border-box;
-    }
-
-    body {
-        margin: 0;
-        font-family: 'Inter', sans-serif;
-        background: #f4f6f9;
-        color: #333;
-    }
-
-    /* =====================================
-       HEADER
-    ===================================== */
-
-    .header {
-        background: #1f4e79;
-        color: white;
-        padding: 20px 30px;
-    }
-
-    .header h1 {
-        margin: 0;
-    }
-
-    .header p {
-        margin: 8px 0 0;
-    }
-
-    /* =====================================
-       CONTAINER
-    ===================================== */
-
-    .container {
-        width: 95%;
-        max-width: 1400px;
-        margin: 25px auto;
-    }
-
-    /* =====================================
-       FLASH MESSAGES
-    ===================================== */
-
-    .flash {
-        background: #dff0d8;
-        color: #27632a;
-        padding: 12px 15px;
-        border-radius: 6px;
-        margin-bottom: 20px;
-    }
-
-    /* =====================================
-       DASHBOARD TOP
-    ===================================== */
-
-    .top-actions {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
-    .top-actions h2 {
-        color: #1f4e79;
-        margin: 0;
-    }
-
-    /* =====================================
-       SEARCH AND FILTER
-    ===================================== */
-
-    .filter-box {
-        background: white;
-        padding: 20px;
-        margin-bottom: 25px;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-
-    .filter-box h2 {
-        margin-top: 0;
-        color: #1f4e79;
-    }
-
-    .filter-form {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        align-items: center;
-    }
-
-    .filter-form input,
-    .filter-form select {
-        padding: 11px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 14px;
-    }
-
-    .filter-form input {
-        min-width: 300px;
-    }
-
-    .search-btn {
-        padding: 11px 18px;
-        background: #1f4e79;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 14px;
-    }
-
-    .search-btn:hover {
-        opacity: 0.9;
-    }
-
-    .clear-btn {
-        display: inline-block;
-        padding: 11px 18px;
-        background: #c0392b;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-    }
-
-    .clear-btn:hover {
-        opacity: 0.9;
-    }
-
-    /* =====================================
-       COMPLAINT TABLE
-    ===================================== */
-
-    .table-card {
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        overflow-x: auto;
-    }
-
-    .table-card h2 {
-        color: #1f4e79;
-        margin-top: 0;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        min-width: 1100px;
-    }
-
-    th {
-        background: #1f4e79;
-        color: white;
-        padding: 12px;
-        text-align: left;
-        white-space: nowrap;
-    }
-
-    td {
-        padding: 12px;
-        border-bottom: 1px solid #ddd;
-        vertical-align: top;
-    }
-
-    tr:hover {
-        background: #f8f9fa;
-    }
-
-    /* =====================================
-       STATUS
-    ===================================== */
-
-    .status {
-        display: inline-block;
-        padding: 5px 9px;
-        border-radius: 15px;
-        font-size: 12px;
-        font-weight: bold;
-    }
-
-    .submitted {
-        background: #fff3cd;
-        color: #856404;
-    }
-
-    .assigned {
-        background: #d9edf7;
-        color: #31708f;
-    }
-
-    .in-progress {
-        background: #fdebd0;
-        color: #9c640c;
-    }
-
-    .resolved {
-        background: #d5f5e3;
-        color: #1e8449;
-    }
-
-    /* =====================================
-       FORMS
-    ===================================== */
-
-    .assign-form,
-    .status-form {
-        margin-bottom: 8px;
-    }
-
-    .assign-form select,
-    .status-form select,
-    .status-form textarea {
-        width: 100%;
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        margin-bottom: 6px;
-    }
-
-    .status-form textarea {
-        resize: vertical;
-        min-height: 50px;
-    }
-
-    .assign-btn {
-        width: 100%;
-        padding: 8px;
-        background: #3498db;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    .assign-btn:hover {
-        opacity: 0.9;
-    }
-
-    .update-btn {
-        width: 100%;
-        padding: 8px;
-        background: #27ae60;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    .update-btn:hover {
-        opacity: 0.9;
-    }
-
-    /* =====================================
-       VIEW BUTTON
-    ===================================== */
-
-    .view-btn {
-        display: inline-block;
-        padding: 7px 12px;
-        background: #8e44ad;
-        color: white;
-        text-decoration: none;
-        border-radius: 4px;
-        font-size: 13px;
-        margin-bottom: 8px;
-    }
-
-    .view-btn:hover {
-        opacity: 0.9;
-    }
-
-    /* =====================================
-       BOTTOM ACTIONS
-    ===================================== */
-
-    .actions {
-        display: flex;
-        gap: 10px;
-        margin-top: 25px;
-        flex-wrap: wrap;
-    }
-
-    .btn {
-        display: inline-block;
-        padding: 11px 18px;
-        text-decoration: none;
-        color: white;
-        border-radius: 5px;
-    }
-
-    .reports-btn {
-        background: #1f4e79;
-    }
-
-    .logout-btn {
-        background: #c0392b;
-    }
-
-    .btn:hover {
-        opacity: 0.9;
-    }
-
-    /* =====================================
-       NO RESULTS
-    ===================================== */
-
-    .no-results {
-        text-align: center;
-        padding: 30px;
-        color: #777;
-    }
-
-    /* =====================================
-       RESPONSIVE
-    ===================================== */
-
-    @media (max-width: 800px) {
-
-        .filter-form {
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        .filter-form input,
-        .filter-form select,
-        .filter-form button,
-        .filter-form a {
-            width: 100%;
-        }
-
-    }
-
-</style>
-```
-
-
-    <!-- Professional Fonts and Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        <style>
-            /* Global Polish */
-            body { font-family: 'Inter', sans-serif !important; }
-            input, button, select, textarea { font-family: 'Inter', sans-serif !important; }
-            .btn, button, .button { transition: all 0.2s ease-in-out !important; cursor: pointer; }
-            .btn:hover, button:hover, .button:hover { transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-            input:focus, textarea:focus, select:focus { outline: none !important; border-color: #3b82f6 !important; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3) !important; }
-        </style>
-    </head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 900: '#1e3a8a' }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 font-sans min-h-screen flex flex-col">
 
+    <!-- Navbar -->
+    <header class="bg-slate-900 text-white shadow-xl sticky top-0 z-50">
+        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-3">
+                    <div class="bg-white/10 text-white p-2 rounded-lg border border-white/20">
+                        <i class="fas fa-university text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg tracking-tight leading-none">CCRS</h1>
+                        <p class="text-[10px] text-slate-400 font-medium mt-0.5 uppercase tracking-wide">Admin Control Panel</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="text-sm font-medium text-slate-300 hidden sm:flex items-center gap-2">
+                        <i class="fas fa-user-shield text-slate-500"></i> {{ session['name'] }}
+                    </span>
+                    <a href="{{ url_for('admin_reports') }}" class="text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+                        <i class="fas fa-chart-bar"></i> Reports
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="text-sm font-semibold text-red-400 hover:text-red-300 bg-red-900/30 hover:bg-red-900/50 px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
 
-<body>
+    <!-- Main Content -->
+    <main class="flex-grow max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
 
-<!-- =====================================
-     HEADER
-===================================== -->
+        <!-- Page Header -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-slate-900">Complaint Management</h2>
+            <p class="text-slate-500 mt-1">Search, assign staff, and update the status of all campus complaints.</p>
+        </div>
 
-<div class="header">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-xl shadow-sm mb-6 flex items-center gap-3">
+                        <i class="fas fa-check-circle text-emerald-500 text-lg"></i>
+                        <span class="font-medium">{{ message }}</span>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
-```
-<h1>
-    Campus Complaint Registry System
-</h1>
+        <!-- Search & Filter -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-6">
+            <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
+                <i class="fas fa-filter text-slate-400"></i> Search & Filter
+            </h3>
+            <form method="GET" action="{{ url_for('admin_dashboard') }}" class="flex flex-wrap gap-3 items-end">
+                <div class="flex-1 min-w-[200px]">
+                    <label class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase">Search</label>
+                    <div class="relative">
+                        <i class="fas fa-search absolute left-3 top-3 text-slate-400 text-sm"></i>
+                        <input type="text" name="search" placeholder="Complaint ID, Student Name or Email"
+                               value="{{ search }}"
+                               class="w-full pl-9 pr-4 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all bg-slate-50">
+                    </div>
+                </div>
+                <div class="min-w-[160px]">
+                    <label class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase">Category</label>
+                    <select name="category" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all bg-slate-50 appearance-none">
+                        <option value="">All Categories</option>
+                        {% for category in categories %}
+                            <option value="{{ category[0] }}" {% if category_filter == category[0] %}selected{% endif %}>{{ category[0] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="min-w-[140px]">
+                    <label class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase">Status</label>
+                    <select name="status" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all bg-slate-50 appearance-none">
+                        <option value="">All Status</option>
+                        <option value="Submitted" {% if status_filter == 'Submitted' %}selected{% endif %}>Submitted</option>
+                        <option value="Assigned"  {% if status_filter == 'Assigned'  %}selected{% endif %}>Assigned</option>
+                        <option value="In Progress" {% if status_filter == 'In Progress' %}selected{% endif %}>In Progress</option>
+                        <option value="Resolved"  {% if status_filter == 'Resolved'  %}selected{% endif %}>Resolved</option>
+                    </select>
+                </div>
+                <div class="flex gap-2">
+                    <button type="submit" class="bg-brand-600 hover:bg-brand-700 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm flex items-center gap-2 shadow-sm">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                    <a href="{{ url_for('admin_dashboard') }}" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm flex items-center gap-2">
+                        <i class="fas fa-times"></i> Clear
+                    </a>
+                </div>
+            </form>
+        </div>
 
-<p>
-    Admin Dashboard |
-    Welcome, {{ session['name'] }}
-</p>
-```
-
-</div>
-
-<div class="container">
-
-```
-<!-- =====================================
-     FLASH MESSAGES
-===================================== -->
-
-{% with messages = get_flashed_messages() %}
-
-    {% if messages %}
-
-        {% for message in messages %}
-
-            <div class="flash">
-                {{ message }}
+        <!-- Complaints Table -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+                <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fas fa-list text-slate-400"></i> All Complaints
+                </h3>
+                <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
+                    {{ complaints|length }} record(s)
+                </span>
             </div>
 
-        {% endfor %}
-
-    {% endif %}
-
-{% endwith %}
-
-
-<!-- =====================================
-     TOP
-===================================== -->
-
-<div class="top-actions">
-
-    <h2>
-        Complaint Management
-    </h2>
-
-</div>
-
-
-<!-- =====================================
-     SEARCH AND FILTER
-===================================== -->
-
-<div class="filter-box">
-
-    <h2>
-        <i class="fas fa-search"></i> Search & Filter Complaints
-    </h2>
-
-
-    <form
-        method="GET"
-        action="{{ url_for('admin_dashboard') }}"
-        class="filter-form"
-    >
-
-
-        <!-- SEARCH -->
-
-        <input
-            type="text"
-            name="search"
-            placeholder="Complaint ID, Student Name or Email"
-            value="{{ search }}"
-        >
-
-
-        <!-- CATEGORY -->
-
-        <select name="category">
-
-            <option value="">
-                All Categories
-            </option>
-
-            {% for category in categories %}
-
-                <option
-                    value="{{ category[0] }}"
-                    {% if category_filter == category[0] %}
-                        selected
-                    {% endif %}
-                >
-                    {{ category[0] }}
-                </option>
-
-            {% endfor %}
-
-        </select>
-
-
-        <!-- STATUS -->
-
-        <select name="status">
-
-            <option value="">
-                All Status
-            </option>
-
-            <option
-                value="Submitted"
-                {% if status_filter == 'Submitted' %}
-                    selected
-                {% endif %}
-            >
-                Submitted
-            </option>
-
-            <option
-                value="Assigned"
-                {% if status_filter == 'Assigned' %}
-                    selected
-                {% endif %}
-            >
-                Assigned
-            </option>
-
-            <option
-                value="In Progress"
-                {% if status_filter == 'In Progress' %}
-                    selected
-                {% endif %}
-            >
-                In Progress
-            </option>
-
-            <option
-                value="Resolved"
-                {% if status_filter == 'Resolved' %}
-                    selected
-                {% endif %}
-            >
-                Resolved
-            </option>
-
-        </select>
-
-
-        <!-- SEARCH BUTTON -->
-
-        <button
-            type="submit"
-            class="search-btn"
-        >
-            <i class="fas fa-search"></i> Search
-        </button>
-
-
-        <!-- CLEAR BUTTON -->
-
-        <a
-            href="{{ url_for('admin_dashboard') }}"
-            class="clear-btn"
-        >
-            ✖ Clear
-        </a>
-
-    </form>
-
-</div>
-
-
-<!-- =====================================
-     COMPLAINTS TABLE
-===================================== -->
-
-<div class="table-card">
-
-    <h2>
-        All Complaints
-    </h2>
-
-
-    {% if complaints %}
-
-    <table>
-
-        <thead>
-
-            <tr>
-
-                <th>
-                    Complaint ID
-                </th>
-
-                <th>
-                    Student
-                </th>
-
-                <th>
-                    Email
-                </th>
-
-                <th>
-                    Category
-                </th>
-
-                <th>
-                    Description
-                </th>
-
-                <th>
-                    Status
-                </th>
-
-                <th>
-                    Created Date
-                </th>
-
-                <th>
-                    Assign Staff
-                </th>
-
-                <th>
-                    Update Status
-                </th>
-
-                <th>
-                    View
-                </th>
-
-            </tr>
-
-        </thead>
-
-
-        <tbody>
-
-            {% for complaint in complaints %}
-
-            <tr>
-
-
-                <!-- COMPLAINT ID -->
-
-                <td>
-                    <strong>
-                        {{ complaint[1] }}
-                    </strong>
-                </td>
-
-
-                <!-- STUDENT -->
-
-                <td>
-                    {{ complaint[2] }}
-                </td>
-
-
-                <!-- EMAIL -->
-
-                <td>
-                    {{ complaint[3] }}
-                </td>
-
-
-                <!-- CATEGORY -->
-
-                <td>
-                    {{ complaint[4] }}
-                </td>
-
-
-                <!-- DESCRIPTION -->
-
-                <td>
-                    {{ complaint[5] }}
-                </td>
-
-
-                <!-- STATUS -->
-
-                <td>
-
-                    {% if complaint[6] == 'Submitted' %}
-
-                        <span class="status submitted">
-                            Submitted
-                        </span>
-
-                    {% elif complaint[6] == 'Assigned' %}
-
-                        <span class="status assigned">
-                            Assigned
-                        </span>
-
-                    {% elif complaint[6] == 'In Progress' %}
-
-                        <span class="status in-progress">
-                            In Progress
-                        </span>
-
-                    {% elif complaint[6] == 'Resolved' %}
-
-                        <span class="status resolved">
-                            Resolved
-                        </span>
-
-                    {% else %}
-
-                        <span class="status">
-                            {{ complaint[6] }}
-                        </span>
-
-                    {% endif %}
-
-                </td>
-
-
-                <!-- CREATED DATE -->
-
-                <td>
-                    {{ complaint[8] }}
-                </td>
-
-
-                <!-- ASSIGN STAFF -->
-
-                <td>
-
-                    <form
-                        method="POST"
-                        action="{{ url_for(
-                            'assign_complaint',
-                            complaint_id=complaint[0]
-                        ) }}"
-                        class="assign-form"
-                    >
-
-                        <select
-                            name="staff_id"
-                            required
-                        >
-
-                            <option value="">
-                                Select Staff
-                            </option>
-
-                            {% for member in staff %}
-
-                                <option
-                                    value="{{ member[0] }}"
-                                    {% if complaint[7] == member[0] %}
-                                        selected
-                                    {% endif %}
-                                >
-                                    {{ member[1] }}
-                                </option>
-
-                            {% endfor %}
-
-                        </select>
-
-
-                        <button
-                            type="submit"
-                            class="assign-btn"
-                        >
-                            Assign
-                        </button>
-
-                    </form>
-
-                </td>
-
-
-                <!-- UPDATE STATUS -->
-
-                <td>
-
-                    <form
-                        method="POST"
-                        action="{{ url_for(
-                            'admin_update_status',
-                            complaint_id=complaint[0]
-                        ) }}"
-                        class="status-form"
-                    >
-
-                        <select
-                            name="status"
-                            required
-                        >
-
-                            <option
-                                value="Submitted"
+            {% if complaints %}
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm min-w-[1100px]">
+                    <thead>
+                        <tr class="bg-slate-50 border-b border-slate-200">
+                            <th class="text-left text-xs font-bold text-slate-500 uppercase tracking-wider px-5 py-3">Complaint ID</th>
+                            <th class="text-left text-xs font-bold text-slate-500 uppercase tracking-wider px-5 py-3">Student</th>
+                            <th class="text-left text-xs font-bold text-slate-500 uppercase tracking-wider px-5 py-3">Email</th>
+                            <th class="text-left text-xs font-bold text-slate-500 uppercase tracking-wider px-5 py-3">Category</th>
+                            <th class="text-left text-xs font-bold text-slate-500 uppercase tracking-wider px-5 py-3">Description</th>
+                            <th class="text-left text-xs font-bold text-slate-500 uppercase tracking-wider px-5 py-3">Status</th>
+                            <th class="text-left text-xs font-bold text-slate-500 uppercase tracking-wider px-5 py-3">Date</th>
+                            <th class="text-left text-xs font-bold text-slate-500 uppercase tracking-wider px-5 py-3">Assign Staff</th>
+                            <th class="text-left text-xs font-bold text-slate-500 uppercase tracking-wider px-5 py-3">Update Status</th>
+                            <th class="text-left text-xs font-bold text-slate-500 uppercase tracking-wider px-5 py-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        {% for complaint in complaints %}
+                        <tr class="hover:bg-slate-50 transition-colors">
+
+                            <!-- ID -->
+                            <td class="px-5 py-4">
+                                <span class="font-mono text-xs font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-md">{{ complaint[1] }}</span>
+                            </td>
+
+                            <!-- Student -->
+                            <td class="px-5 py-4 font-medium text-slate-800">{{ complaint[2] }}</td>
+
+                            <!-- Email -->
+                            <td class="px-5 py-4 text-slate-500 text-xs">{{ complaint[3] }}</td>
+
+                            <!-- Category -->
+                            <td class="px-5 py-4">
+                                <span class="bg-brand-50 text-brand-700 text-xs font-semibold px-2.5 py-1 rounded-md">{{ complaint[4] }}</span>
+                            </td>
+
+                            <!-- Description -->
+                            <td class="px-5 py-4 text-slate-600 max-w-[180px]">
+                                <p class="line-clamp-2 text-xs">{{ complaint[5] }}</p>
+                            </td>
+
+                            <!-- Status -->
+                            <td class="px-5 py-4">
                                 {% if complaint[6] == 'Submitted' %}
-                                    selected
+                                    <span class="bg-yellow-100 text-yellow-700 text-xs font-bold px-2.5 py-1 rounded-full">Submitted</span>
+                                {% elif complaint[6] == 'Assigned' %}
+                                    <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-full">Assigned</span>
+                                {% elif complaint[6] == 'In Progress' %}
+                                    <span class="bg-orange-100 text-orange-700 text-xs font-bold px-2.5 py-1 rounded-full">In Progress</span>
+                                {% elif complaint[6] == 'Resolved' %}
+                                    <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-full">Resolved</span>
+                                {% else %}
+                                    <span class="bg-slate-100 text-slate-700 text-xs font-bold px-2.5 py-1 rounded-full">{{ complaint[6] }}</span>
                                 {% endif %}
-                            >
-                                Submitted
-                            </option>
+                            </td>
 
-                            <option
-                                value="Assigned"
-                                {% if complaint[6] == 'Assigned' %}
-                                    selected
-                                {% endif %}
-                            >
-                                Assigned
-                            </option>
+                            <!-- Date -->
+                            <td class="px-5 py-4 text-slate-500 text-xs whitespace-nowrap">{{ complaint[8] }}</td>
 
-                            <option
-                                value="In Progress"
-                                {% if complaint[6] == 'In Progress' %}
-                                    selected
-                                {% endif %}
-                            >
-                                In Progress
-                            </option>
+                            <!-- Assign Staff -->
+                            <td class="px-5 py-4">
+                                <form method="POST" action="{{ url_for('assign_complaint', complaint_id=complaint[0]) }}" class="flex flex-col gap-1.5">
+                                    <select name="staff_id" required class="px-2 py-1.5 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none bg-white min-w-[120px]">
+                                        <option value="">Select Staff</option>
+                                        {% for member in staff %}
+                                            <option value="{{ member[0] }}" {% if complaint[7] == member[0] %}selected{% endif %}>{{ member[1] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" class="bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold py-1.5 px-3 rounded-lg transition-colors">
+                                        <i class="fas fa-user-check mr-1"></i> Assign
+                                    </button>
+                                </form>
+                            </td>
 
-                            <option
-                                value="Resolved"
-                                {% if complaint[6] == 'Resolved' %}
-                                    selected
-                                {% endif %}
-                            >
-                                Resolved
-                            </option>
+                            <!-- Update Status -->
+                            <td class="px-5 py-4">
+                                <form method="POST" action="{{ url_for('admin_update_status', complaint_id=complaint[0]) }}" class="flex flex-col gap-1.5">
+                                    <select name="status" required class="px-2 py-1.5 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none bg-white min-w-[120px]">
+                                        <option value="Submitted"  {% if complaint[6] == 'Submitted'  %}selected{% endif %}>Submitted</option>
+                                        <option value="Assigned"   {% if complaint[6] == 'Assigned'   %}selected{% endif %}>Assigned</option>
+                                        <option value="In Progress" {% if complaint[6] == 'In Progress' %}selected{% endif %}>In Progress</option>
+                                        <option value="Resolved"   {% if complaint[6] == 'Resolved'   %}selected{% endif %}>Resolved</option>
+                                    </select>
+                                    <textarea name="remarks" placeholder="Remarks (optional)"
+                                              class="px-2 py-1.5 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none bg-white resize-none min-h-[52px]"></textarea>
+                                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold py-1.5 px-3 rounded-lg transition-colors">
+                                        <i class="fas fa-save mr-1"></i> Update
+                                    </button>
+                                </form>
+                            </td>
 
-                        </select>
+                            <!-- Actions -->
+                            <td class="px-5 py-4">
+                                <div class="flex flex-col gap-2">
+                                    <a href="{{ url_for('complaint_details', complaint_id=complaint[0]) }}"
+                                       class="bg-violet-50 hover:bg-violet-100 text-violet-700 border border-violet-200 text-xs font-semibold py-1.5 px-3 rounded-lg text-center transition-colors whitespace-nowrap">
+                                        <i class="fas fa-eye mr-1"></i> Details
+                                    </a>
+                                    <a href="{{ url_for('complaint_history', complaint_id=complaint[0]) }}"
+                                       class="bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-semibold py-1.5 px-3 rounded-lg text-center transition-colors whitespace-nowrap">
+                                        <i class="fas fa-history mr-1"></i> History
+                                    </a>
+                                </div>
+                            </td>
 
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="py-16 text-center">
+                <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center text-2xl mx-auto mb-4">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800 mb-2">No Complaints Found</h3>
+                <p class="text-slate-500">Try adjusting your search filters to find what you're looking for.</p>
+                <a href="{{ url_for('admin_dashboard') }}" class="inline-flex items-center gap-2 mt-4 text-sm font-semibold text-brand-600 hover:underline">
+                    <i class="fas fa-times-circle"></i> Clear all filters
+                </a>
+            </div>
+            {% endif %}
+        </div>
 
-                        <textarea
-                            name="remarks"
-                            placeholder="Remarks"
-                        ></textarea>
+    </main>
 
-
-                        <button
-                            type="submit"
-                            class="update-btn"
-                        >
-                            Update
-                        </button>
-
-                    </form>
-
-                </td>
-
-
-                <!-- VIEW -->
-
-                <td>
-
-                    <a
-                        href="{{ url_for(
-                            'complaint_details',
-                            complaint_id=complaint[0]
-                        ) }}"
-                        class="view-btn"
-                    >
-                        View Details
-                    </a>
-
-                    <br>
-
-                    <a
-                        href="{{ url_for(
-                            'complaint_history',
-                            complaint_id=complaint[0]
-                        ) }}"
-                        class="view-btn"
-                    >
-                        View History
-                    </a>
-
-                </td>
-
-            </tr>
-
-            {% endfor %}
-
-        </tbody>
-
-    </table>
-
-
-    {% else %}
-
-    <div class="no-results">
-
-        <h3>
-            No complaints found.
-        </h3>
-
-        <p>
-            Try changing your search or filter.
-        </p>
-
-    </div>
-
-    {% endif %}
-
-</div>
-
-
-<!-- =====================================
-     BOTTOM ACTIONS
-===================================== -->
-
-<div class="actions">
-
-    <a
-        href="{{ url_for('admin_reports') }}"
-        class="btn reports-btn"
-    >
-        <i class="fas fa-chart-bar"></i> View Reports
-    </a>
-
-
-    <a
-        href="{{ url_for('logout') }}"
-        class="btn logout-btn"
-    >
-        Logout
-    </a>
-
-</div>
-```
-
-</div>
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-auto">
+        <div class="max-w-screen-2xl mx-auto px-4 text-center text-sm text-slate-500 font-medium">
+            &copy; 2026 Campus Complaint Registry System. All rights reserved.
+        </div>
+    </footer>
 
 </body>
-
 </html>

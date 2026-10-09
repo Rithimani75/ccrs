@@ -1,204 +1,170 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Student Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard — CCRS</title>
 
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #f4f6f9;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: auto;
-        }
-
-        h1 {
-            color: #222;
-        }
-
-        .welcome {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .notification {
-            background: #d1fae5;
-            border-left: 5px solid #16a34a;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 6px;
-            color: #166534;
-        }
-
-        .complaint {
-            background: white;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .complaint h3 {
-            color: #2563eb;
-        }
-
-        .status {
-            font-weight: bold;
-        }
-
-        .resolved {
-            color: #16a34a;
-        }
-
-        .other {
-            color: #d97706;
-        }
-
-        .button {
-            display: inline-block;
-            padding: 10px 15px;
-            margin-top: 12px;
-            margin-right: 8px;
-            background: #2563eb;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-        }
-
-        .logout {
-            background: #dc2626;
-        }
-    </style>
-
-    <!-- Professional Fonts and Icons -->
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        <style>
-            /* Global Polish */
-            body { font-family: 'Inter', sans-serif !important; }
-            input, button, select, textarea { font-family: 'Inter', sans-serif !important; }
-            .btn, button, .button { transition: all 0.2s ease-in-out !important; cursor: pointer; }
-            .btn:hover, button:hover, .button:hover { transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-            input:focus, textarea:focus, select:focus { outline: none !important; border-color: #3b82f6 !important; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3) !important; }
-        </style>
-    </head>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 900: '#1e3a8a' }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 font-sans min-h-screen flex flex-col">
 
-
-<body>
-
-<div class="container">
-
-    <h1>Campus Complaint Registry System</h1>
-
-    <div class="welcome">
-        <h2>Student Dashboard</h2>
-        <p>Welcome, {{ session['name'] }}</p>
-    </div>
-
-
-    {% if complaints %}
-
-        {% for complaint in complaints %}
-
-            {% if complaint[4] == 'Resolved' %}
-
-                <div class="notification">
-                    <strong>Complaint Resolved!</strong><br>
-                    Your complaint
-                    <strong>{{ complaint[1] }}</strong>
-                    has been resolved.
+    <!-- Navbar -->
+    <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-3">
+                    <div class="bg-brand-600 text-white p-2 rounded-lg">
+                        <i class="fas fa-university text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg text-slate-900 tracking-tight leading-none">CCRS</h1>
+                        <p class="text-[10px] text-slate-500 font-medium mt-0.5 uppercase tracking-wide">Student Portal</p>
+                    </div>
                 </div>
-
-            {% endif %}
-
-
-            <div class="complaint">
-
-                <h3>Complaint ID: {{ complaint[1] }}</h3>
-
-                <p>
-                    <strong>Category:</strong>
-                    {{ complaint[2] }}
-                </p>
-
-                <p>
-                    <strong>Description:</strong>
-                    {{ complaint[3] }}
-                </p>
-
-                <p>
-                    <strong>Status:</strong>
-
-                    {% if complaint[4] == 'Resolved' %}
-                        <span class="status resolved">
-                            {{ complaint[4] }}
-                        </span>
-                    {% else %}
-                        <span class="status other">
-                            {{ complaint[4] }}
-                        </span>
-                    {% endif %}
-
-                </p>
-
-                <p>
-                    <strong>Submitted On:</strong>
-                    {{ complaint[5] }}
-                </p>
-
-
-                <a href="{{ url_for('complaint_details', complaint_id=complaint[0]) }}"
-                   class="button">
-                    View Details
-                </a>
-
-                <a href="{{ url_for('complaint_history', complaint_id=complaint[0]) }}"
-                   class="button">
-                    View History
-                </a>
-
+                <div class="flex items-center gap-6">
+                    <span class="text-sm font-medium text-slate-600 hidden sm:block">
+                        <i class="fas fa-user-circle text-slate-400 mr-1.5"></i> {{ session['name'] }}
+                    </span>
+                    <a href="/logout" class="text-sm font-semibold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 px-4 py-2 rounded-lg transition-colors">
+                        Logout <i class="fas fa-sign-out-alt ml-1"></i>
+                    </a>
+                </div>
             </div>
+        </div>
+    </header>
 
-        {% endfor %}
-
-    {% else %}
-
-        <div class="complaint">
-            <p>No complaints submitted yet.</p>
-
-            <a href="/submit_complaint" class="button">
-                Submit Complaint
-            </a>
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        
+        <!-- Welcome Header -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900">Dashboard</h2>
+                <p class="text-slate-500 mt-1">Manage and track your campus complaints.</p>
+            </div>
+            <div class="flex gap-3">
+                <a href="/my_complaints" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold py-2.5 px-5 rounded-xl shadow-sm transition-all flex items-center gap-2">
+                    <i class="fas fa-list-ul"></i> My Complaints
+                </a>
+                <a href="/submit_complaint" class="bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2.5 px-5 rounded-xl shadow-sm hover:shadow-md transition-all flex items-center gap-2">
+                    <i class="fas fa-plus-circle"></i> New Complaint
+                </a>
+            </div>
         </div>
 
-    {% endif %}
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-xl shadow-sm mb-6 flex items-center gap-3">
+                        <i class="fas fa-check-circle text-emerald-500 text-lg"></i>
+                        <span class="font-medium">{{ message }}</span>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
+        <!-- Notifications -->
+        {% if complaints %}
+            {% for complaint in complaints %}
+                {% if complaint[4] == 'Resolved' %}
+                    <div class="bg-brand-50 border-l-4 border-brand-500 p-4 rounded-r-xl shadow-sm mb-6 flex items-start gap-4">
+                        <i class="fas fa-bell text-brand-500 mt-1"></i>
+                        <div>
+                            <h3 class="font-bold text-brand-900">Complaint Resolved!</h3>
+                            <p class="text-brand-700 text-sm mt-1">Your complaint <span class="font-semibold">#{{ complaint[1] }}</span> has been successfully resolved.</p>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
 
-    <a href="/submit_complaint" class="button">
-        Submit New Complaint
-    </a>
+        <!-- Complaints Grid -->
+        <h3 class="text-lg font-bold text-slate-800 mb-4">Your Recent Complaints</h3>
+        
+        {% if complaints %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for complaint in complaints %}
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow overflow-hidden flex flex-col">
+                    <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                        <div class="font-mono text-sm font-semibold text-slate-500">
+                            #{{ complaint[1] }}
+                        </div>
+                        
+                        {% if complaint[4] == 'Resolved' %}
+                            <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5"><i class="fas fa-check"></i> Resolved</span>
+                        {% elif complaint[4] == 'In Progress' %}
+                            <span class="bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5"><i class="fas fa-spinner fa-spin"></i> Progress</span>
+                        {% elif complaint[4] == 'Assigned' %}
+                            <span class="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5"><i class="fas fa-user-check"></i> Assigned</span>
+                        {% else %}
+                            <span class="bg-slate-100 text-slate-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5"><i class="fas fa-clock"></i> {{ complaint[4] }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="p-5 flex-grow">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="bg-brand-50 text-brand-700 text-xs font-semibold px-2.5 py-1 rounded-md">{{ complaint[2] }}</span>
+                        </div>
+                        <p class="text-slate-700 text-sm line-clamp-3 mb-4">{{ complaint[3] }}</p>
+                        <div class="text-xs text-slate-500 flex items-center gap-1.5">
+                            <i class="far fa-calendar-alt"></i> Submitted: {{ complaint[5] }}
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 border-t border-slate-100 bg-slate-50 flex gap-3">
+                        <a href="{{ url_for('complaint_details', complaint_id=complaint[0]) }}" class="flex-1 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-center text-sm font-semibold py-2 rounded-lg transition-colors">
+                            Details
+                        </a>
+                        <a href="{{ url_for('complaint_history', complaint_id=complaint[0]) }}" class="flex-1 bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200 text-center text-sm font-semibold py-2 rounded-lg transition-colors">
+                            History
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-12 text-center">
+                <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center text-2xl mx-auto mb-4">
+                    <i class="fas fa-inbox"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800 mb-2">No Complaints Found</h3>
+                <p class="text-slate-500 mb-6 max-w-sm mx-auto">You haven't submitted any complaints yet. If you have an issue, report it now.</p>
+                <a href="/submit_complaint" class="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2.5 px-6 rounded-xl shadow-sm transition-all">
+                    <i class="fas fa-plus"></i> Submit Complaint
+                </a>
+            </div>
+        {% endif %}
 
-    <a href="/my_complaints" class="button">
-        My Complaints
-    </a>
+    </main>
 
-    <a href="/logout" class="button logout">
-        Logout
-    </a>
-
-</div>
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center text-sm text-slate-500 font-medium">
+            &copy; 2026 Campus Complaint Registry System. All rights reserved.
+        </div>
+    </footer>
 
 </body>
 </html>
-
