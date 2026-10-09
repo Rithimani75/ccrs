@@ -1,8 +1,8 @@
-
 from flask import Flask, render_template, request, redirect, session, flash
 from flask_mysqldb import MySQL
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
+from flask_mail import Mail, Message
 
 import os
 import random
@@ -31,6 +31,23 @@ app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'ccrs'
 
 mysql = MySQL(app)
+
+
+# =========================================================
+# EMAIL CONFIGURATION
+# =========================================================
+# IMPORTANT:
+# Replace these two values with your Gmail address and
+# Gmail APP PASSWORD. Do not use your normal Gmail password.
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = 'rithikamani05@gmail.com'
+app.config['MAIL_PASSWORD'] = 'kyee avqh qwpm gxpo'
+app.config['MAIL_DEFAULT_SENDER'] = 'rithikamani05@gmail.com'
+
+mail = Mail(app)
 
 
 # =========================================================
@@ -72,6 +89,65 @@ def allowed_file(filename):
     )
 
 
+def send_status_email(student_email, student_name, complaint_id,
+                      status, remarks=''):
+
+    if not student_email:
+        print('EMAIL ERROR: Student email is empty.')
+        return False
+
+    try:
+        if status == 'Resolved':
+            subject = f'CCRS Complaint Resolved - {complaint_id}'
+            message = f'''Hello {student_name},
+
+Your complaint has been RESOLVED.
+
+Complaint ID: {complaint_id}
+Status: Resolved
+Remarks: {remarks if remarks else 'Your complaint has been resolved successfully.'}
+
+You can login to the Campus Complaint Registry System
+to view the complete complaint history.
+
+Regards,
+Campus Complaint Registry System
+'''
+        else:
+            subject = f'CCRS Complaint Status Updated - {complaint_id}'
+            message = f'''Hello {student_name},
+
+Your complaint status has been updated.
+
+Complaint ID: {complaint_id}
+New Status: {status}
+Remarks: {remarks if remarks else 'No remarks'}
+
+You can login to the Campus Complaint Registry System
+to view the complete complaint history.
+
+Regards,
+Campus Complaint Registry System
+'''
+
+        msg = Message(
+            subject=subject,
+            sender=app.config['MAIL_USERNAME'],
+            recipients=[student_email]
+        )
+
+        msg.body = message
+        mail.send(msg)
+
+        print('EMAIL SENT SUCCESSFULLY TO:', student_email)
+        return True
+
+    except Exception as e:
+        # Email failure should NOT break the complaint update.
+        print('EMAIL ERROR:', e)
+        return False
+
+
 def generate_complaint_id():
 
     while True:
@@ -109,9 +185,7 @@ def generate_complaint_id():
 @app.route('/')
 def index():
 
-    return render_template(
-        'index.html'
-    )
+    return redirect('/login')
 
 
 # =========================================================
@@ -322,6 +396,49 @@ def login():
     return render_template(
         'login.html'
     )
+
+
+# =========================================================
+# TEST EMAIL
+# =========================================================
+
+@app.route('/test_email')
+def test_email():
+
+    if 'user_id' not in session:
+        return redirect('/login')
+
+    # Send the test email to the currently logged-in user's email.
+    recipient = session.get('email')
+
+    if not recipient:
+        return 'No email address found for the logged-in user.', 400
+
+    try:
+        msg = Message(
+            subject='CCRS Email Test',
+            sender=app.config['MAIL_USERNAME'],
+            recipients=[recipient]
+        )
+
+        msg.body = '''Hello,
+
+This is a test email from the
+Campus Complaint Registry System.
+
+Email notification is working successfully.
+
+Regards,
+CCRS Admin
+'''
+
+        mail.send(msg)
+
+        return f'Test email sent successfully to {recipient}!'
+
+    except Exception as e:
+        print('TEST EMAIL ERROR:', e)
+        return f'Unable to send email. Check your Gmail configuration. Error: {e}', 500
 
 
 # =========================================================
@@ -1108,6 +1225,31 @@ def admin_update_status(
 
     try:
 
+        # Get student information for email notification
+        cur.execute(
+            '''
+            SELECT
+                c.complaint_id,
+                u.name,
+                u.email
+            FROM complaints c
+            JOIN users u
+                ON c.student_id = u.id
+            WHERE c.id = %s
+            ''',
+            (complaint_id,)
+        )
+
+        complaint_info = cur.fetchone()
+
+        if not complaint_info:
+            flash('Complaint not found.')
+            return redirect('/admin_dashboard')
+
+        email_complaint_id = complaint_info[0]
+        student_name = complaint_info[1]
+        student_email = complaint_info[2]
+
         if status == 'Resolved':
 
             cur.execute(
@@ -1166,6 +1308,15 @@ def admin_update_status(
         )
 
         mysql.connection.commit()
+
+        # Send email after the database update succeeds.
+        send_status_email(
+            student_email,
+            student_name,
+            email_complaint_id,
+            status,
+            remarks if remarks else 'No remarks'
+        )
 
         flash(
             'Complaint status updated.'
@@ -1315,6 +1466,31 @@ def staff_update_status(
                 '/staff_dashboard'
             )
 
+        # Get student information for email notification
+        cur.execute(
+            '''
+            SELECT
+                c.complaint_id,
+                u.name,
+                u.email
+            FROM complaints c
+            JOIN users u
+                ON c.student_id = u.id
+            WHERE c.id = %s
+            ''',
+            (complaint_id,)
+        )
+
+        complaint_info = cur.fetchone()
+
+        if not complaint_info:
+            flash('Complaint not found.')
+            return redirect('/staff_dashboard')
+
+        email_complaint_id = complaint_info[0]
+        student_name = complaint_info[1]
+        student_email = complaint_info[2]
+
         # Update complaint
         if status == 'Resolved':
 
@@ -1375,6 +1551,15 @@ def staff_update_status(
         )
 
         mysql.connection.commit()
+
+        # Send email after the database update succeeds.
+        send_status_email(
+            student_email,
+            student_name,
+            email_complaint_id,
+            status,
+            remarks if remarks else 'No remarks'
+        )
 
         flash(
             'Complaint status updated successfully.'

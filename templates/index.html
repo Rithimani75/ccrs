@@ -3,84 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Campus Complaint Registry System</title>
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 </head>
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
 
-<body>
-
-    <header>
-        <div class="logo">
-            CCRS
+    <!-- Navbar -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center gap-3">
+                    <div class="bg-brand-600 text-white p-2 rounded-lg">
+                        <i class="fas fa-university text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-xl text-slate-900 tracking-tight leading-none">CCRS</h1>
+                        <p class="text-xs text-slate-500 font-medium mt-1">Campus Complaint Registry</p>
+                    </div>
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="/" class="text-brand-600 font-semibold flex items-center gap-2 transition-colors border-b-2 border-brand-600 pb-1">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                    <a href="/login" class="text-slate-600 hover:text-brand-600 font-medium flex items-center gap-2 transition-colors">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                    <a href="/register" class="text-slate-600 hover:text-brand-600 font-medium flex items-center gap-2 transition-colors">
+                        <i class="fas fa-user-plus"></i> Register
+                    </a>
+                </nav>
+            </div>
         </div>
-
-        <nav>
-            <a href="/">Home</a>
-            <a href="/login">Login</a>
-            <a href="/register">Register</a>
-        </nav>
     </header>
 
-    <section class="hero">
+    <!-- Hero Section -->
+    <main class="flex-grow">
+        <section class="relative bg-brand-900 overflow-hidden">
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80')] bg-cover bg-center opacity-20 mix-blend-overlay"></div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-24 lg:py-32">
+                <div class="max-w-2xl text-white">
+                    <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-6 leading-tight">
+                        A Better Way to Resolve Campus Issues
+                    </h2>
+                    <p class="text-lg md:text-xl text-brand-100 mb-10 leading-relaxed font-light">
+                        Report maintenance problems, IT issues, or safety concerns directly to the appropriate departments. Track your complaint status in real-time.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="/submit_complaint" class="bg-white text-brand-700 hover:bg-brand-50 px-8 py-3.5 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-3 transform hover:-translate-y-1">
+                            <i class="fas fa-paper-plane"></i> Submit Complaint
+                        </a>
+                        <a href="/login" class="bg-brand-600 text-white hover:bg-brand-500 border border-brand-500 px-8 py-3.5 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-3 transform hover:-translate-y-1">
+                            <i class="fas fa-search"></i> Track Status
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <h1>Campus Complaint Registry System</h1>
+        <!-- Features Section -->
+        <section class="py-20 bg-slate-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h3 class="text-3xl font-bold text-slate-900 mb-4">How It Works</h3>
+                    <p class="text-slate-500 max-w-2xl mx-auto text-lg">Our streamlined process ensures your complaints are heard and addressed quickly.</p>
+                </div>
 
-        <p>
-            Report campus problems easily, track complaints,
-            and get issues resolved faster.
-        </p>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Feature 1 -->
+                    <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow border border-slate-100">
+                        <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-2xl mb-6 shadow-inner">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-900 mb-3">1. Submit Request</h4>
+                        <p class="text-slate-600 leading-relaxed">
+                            Log in and fill out a simple form detailing your issue. Attach photos for better clarity.
+                        </p>
+                    </div>
 
-        <div class="buttons">
-            <a href="/login" class="btn">Student Login</a>
-            <a href="/register" class="btn">Register</a>
+                    <!-- Feature 2 -->
+                    <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow border border-slate-100">
+                        <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center text-2xl mb-6 shadow-inner">
+                            <i class="fas fa-user-cog"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-900 mb-3">2. Staff Assignment</h4>
+                        <p class="text-slate-600 leading-relaxed">
+                            The system automatically routes your complaint to the relevant department and staff member.
+                        </p>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow border border-slate-100">
+                        <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-2xl mb-6 shadow-inner">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-900 mb-3">3. Quick Resolution</h4>
+                        <p class="text-slate-600 leading-relaxed">
+                            Track the progress live. You will be notified immediately once the issue is resolved.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-300 py-12 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-university text-2xl text-slate-500"></i>
+                <div>
+                    <p class="font-bold text-white">Campus Complaint Registry System</p>
+                    <p class="text-sm text-slate-500 mt-1">Adhiyamaan College of Engineering | MCA</p>
+                </div>
+            </div>
+            <div class="text-sm text-slate-500">
+                &copy; 2026 CCRS. All rights reserved.
+            </div>
         </div>
-
-    </section>
-
-    <section class="features">
-
-        <h2>Our Services</h2>
-
-        <div class="feature-container">
-
-            <div class="feature">
-                <h3>📝 Submit Complaint</h3>
-                <p>
-                    Students can submit complaints online
-                    with complete details.
-                </p>
-            </div>
-
-            <div class="feature">
-                <h3>🔍 Track Complaint</h3>
-                <p>
-                    Track the current status of your complaint
-                    using the complaint ID.
-                </p>
-            </div>
-
-            <div class="feature">
-                <h3>⚡ Faster Resolution</h3>
-                <p>
-                    Complaints can be assigned to the
-                    appropriate staff for quick resolution.
-                </p>
-            </div>
-
-        </div>
-
-    </section>
-
-    <footer>
-        <p>
-            Adhiyamaan College of Engineering
-        </p>
-
-        <p>
-            Campus Complaint Registry System | MCA
-        </p>
     </footer>
 
 </body>
