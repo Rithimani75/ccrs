@@ -1,8 +1,8 @@
-CREATE DATABASE ccrs;
+CREATE DATABASE IF NOT EXISTS ccrs;
 
 USE ccrs;
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     register_number VARCHAR(30),
@@ -11,7 +11,7 @@ CREATE TABLE users (
     role VARCHAR(20) DEFAULT 'student'
 );
 
-CREATE TABLE complaints (
+CREATE TABLE IF NOT EXISTS complaints (
     id INT AUTO_INCREMENT PRIMARY KEY,
     complaint_id VARCHAR(20) UNIQUE NOT NULL,
     student_id INT NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE complaints (
     resolved_at TIMESTAMP NULL
 );
 
-CREATE TABLE complaint_updates (
+CREATE TABLE IF NOT EXISTS complaint_updates (
     id INT AUTO_INCREMENT PRIMARY KEY,
     complaint_id INT NOT NULL,
     status VARCHAR(30) NOT NULL,
